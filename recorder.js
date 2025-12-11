@@ -116,7 +116,7 @@ function saveRecording(mimeType) {
     URL.revokeObjectURL(url);
 }
 
-export function updateRecorder(mainCanvas) {
+export function updateRecorder(mainCanvas, pan = { x: 0.5, y: 0.5 }) {
     if (!recording || !recordCtx) return;
 
     // Draw main canvas content covering the vertical video frame
@@ -130,9 +130,20 @@ export function updateRecorder(mainCanvas) {
     const renderW = srcW * scale;
     const renderH = srcH * scale;
     
-    // Center alignment
-    const x = (dstW - renderW) / 2;
-    const y = (dstH - renderH) / 2;
+    // Pan alignment based on mouse position (camera man effect)
+    let x, y;
+
+    if (renderW > dstW) {
+        x = (dstW - renderW) * pan.x;
+    } else {
+        x = (dstW - renderW) / 2;
+    }
+
+    if (renderH > dstH) {
+        y = (dstH - renderH) * pan.y;
+    } else {
+        y = (dstH - renderH) / 2;
+    }
 
     recordCtx.fillStyle = '#000';
     recordCtx.fillRect(0, 0, dstW, dstH);

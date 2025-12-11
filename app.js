@@ -221,7 +221,7 @@ function renderCurrent(timestamp) {
     );
     
     // Feed the recorder
-    updateRecorder(canvas);
+    updateRecorder(canvas, smoothMouse);
 }
 
 function resize() {
