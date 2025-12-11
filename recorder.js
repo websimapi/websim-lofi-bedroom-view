@@ -9,6 +9,10 @@ let recordCtx = null;
 let qrImg = null;
 const QR_URL = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://lofixmas--api.on.websim.com';
 
+const VIDEO_WIDTH = 720;
+const VIDEO_HEIGHT = 1280;
+const RECORD_DURATION = 30000;
+
 export async function initRecorder() {
     try {
         qrImg = await loadImage(QR_URL);
@@ -38,15 +42,15 @@ function getSupportedMimeType() {
 
 function startRecording() {
     if (recording) return;
-    console.log('Starting 15s recording...');
+    console.log('Starting 30s recording...');
 
     const canvas = document.getElementById('main-canvas');
     const audioStream = getAudioStream();
 
-    // Setup record canvas to match main canvas
+    // Setup record canvas for vertical short format
     recordCanvas = document.createElement('canvas');
-    recordCanvas.width = canvas.width;
-    recordCanvas.height = canvas.height;
+    recordCanvas.width = VIDEO_WIDTH;
+    recordCanvas.height = VIDEO_HEIGHT;
     recordCtx = recordCanvas.getContext('2d');
 
     // Capture stream from the recording canvas
@@ -83,10 +87,10 @@ function startRecording() {
     recorder.start();
     recording = true;
 
-    // Stop after 15 seconds
+    // Stop after 30 seconds
     setTimeout(() => {
         if (recording) stopRecording();
-    }, 15000);
+    }, RECORD_DURATION);
 }
 
 function stopRecording() {
@@ -115,20 +119,34 @@ function saveRecording(mimeType) {
 export function updateRecorder(mainCanvas) {
     if (!recording || !recordCtx) return;
 
-    // Copy main canvas content
-    recordCtx.drawImage(mainCanvas, 0, 0);
+    // Draw main canvas content covering the vertical video frame
+    const srcW = mainCanvas.width;
+    const srcH = mainCanvas.height;
+    const dstW = recordCanvas.width;
+    const dstH = recordCanvas.height;
+
+    // "Cover" scaling to fill vertical video
+    const scale = Math.max(dstW / srcW, dstH / srcH);
+    const renderW = srcW * scale;
+    const renderH = srcH * scale;
+    
+    // Center alignment
+    const x = (dstW - renderW) / 2;
+    const y = (dstH - renderH) / 2;
+
+    recordCtx.fillStyle = '#000';
+    recordCtx.fillRect(0, 0, dstW, dstH);
+    recordCtx.drawImage(mainCanvas, x, y, renderW, renderH);
 
     // Draw QR Code bottom right
     if (qrImg) {
         const size = 150; 
         const padding = 30;
-        // Keep QR aspect ratio square
-        const x = recordCanvas.width - size - padding;
-        const y = recordCanvas.height - size - padding;
+        const qrX = dstW - size - padding;
+        const qrY = dstH - size - padding;
 
-        // Draw a slight dark backing for visibility if needed, but simple draw is likely fine
         recordCtx.globalAlpha = 0.9;
-        recordCtx.drawImage(qrImg, x, y, size, size);
+        recordCtx.drawImage(qrImg, qrX, qrY, size, size);
         recordCtx.globalAlpha = 1.0;
     }
 }
