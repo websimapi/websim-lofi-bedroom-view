@@ -1,0 +1,28 @@
+{
+  "cityscape": {
+    "scale": 1.1,
+    "offsetX": 0.0,
+    "offsetY": 0.0
+  },
+  "monitor": {
+    "x": 0.18514644351464438,
+    "y": 0.5569037656903766,
+    "scale": 0.25,
+    "zIndex": 10,
+    "flipHorizontal": true,
+    "blueScreen": {
+      "scaleX": 0.85,
+      "scaleY": 0.7,
+      "offsetX": 0.0,
+      "offsetY": 0.0,
+      "color": "#000000"
+    }
+  },
+  "santa_bear": {
+    "x": 0.6149452269170579,
+    "y": 0.5678403755868545,
+    "scale": 0.2,
+    "flipHorizontal": true
+  }
+}
+

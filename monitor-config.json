@@ -1,0 +1,15 @@
+{
+  "x": 0.18514644351464438,
+  "y": 0.5569037656903766,
+  "scale": 0.25,
+  "zIndex": 10,
+  "flipHorizontal": true,
+  "blueScreen": {
+    "scaleX": 0.85,
+    "scaleY": 0.7,
+    "offsetX": 0.0,
+    "offsetY": 0.0,
+    "color": "#000000"
+  }
+}
+
